@@ -1,30 +1,14 @@
-@extends('layouts.app')
+<x-layouts.app title="Edit Course">
 
-@section('title', 'Edit Course')
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Edit Course</h1>
+        <a href="{{ route('courses.index') }}" class="btn btn-secondary">Back to Courses</a>
+    </div>
 
-@section('content')
+    <form action="{{ route('courses.update', $course) }}" method="POST">
+        @csrf
+        @method('PUT')
+        <x-courses.form :course="$course" button-text="Update Course" />
+    </form>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Edit Course</h1>
-
-```
-<a href="{{ route('courses.index') }}" class="btn btn-secondary">
-    Back to Courses
-</a>
-```
-
-</div>
-
-<form action="{{ route('courses.update', $course) }}" method="POST">
-    @csrf
-    @method('PUT')
-
-```
-@include('courses._form', [
-    'buttonText' => 'Update Course'
-])
-```
-
-</form>
-
-@endsection
+</x-layouts.app>
