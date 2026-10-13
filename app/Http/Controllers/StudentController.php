@@ -12,12 +12,14 @@ class StudentController extends Controller
     {
         return [
             'name' => 'required|string|max:255',
+
             'email' => [
                 'required',
                 'email',
                 'max:255',
                 Rule::unique('students', 'email')->ignore($id),
             ],
+
             'phone' => 'required|string|max:20',
             'address' => 'required|string|max:500',
             'date_of_birth' => 'required|date|before:today',
@@ -38,13 +40,16 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate($this->rules());
+        $validated = $request->validate($this->rules());
 
-        Student::create($data);
+        $student = Student::create($validated);
 
         return redirect()
             ->route('students.index')
-            ->with('success', 'Student created successfully.');
+            ->with(
+                'success',
+                "Student {$student->name} created successfully!"
+            );
     }
 
     public function show(Student $student)
@@ -59,21 +64,32 @@ class StudentController extends Controller
 
     public function update(Request $request, Student $student)
     {
-        $data = $request->validate($this->rules($student->id));
+        $validated = $request->validate(
+            $this->rules($student->id)
+        );
 
-        $student->update($data);
+        $student->update($validated);
 
         return redirect()
             ->route('students.index')
-            ->with('success', 'Student updated successfully.');
+            ->with(
+                'success',
+                "Student {$student->name} updated successfully!"
+            );
     }
 
     public function destroy(Student $student)
     {
+        $name = $student->name;
+
         $student->delete();
 
         return redirect()
             ->route('students.index')
-            ->with('success', 'Student deleted successfully.');
+            ->with(
+                'success',
+                "Student {$name} deleted successfully!"
+            );
     }
 }
+
